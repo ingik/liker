@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'RPG 직업 추천 테스트',
-  description: '당신에게 어울리는 RPG 직업을 찾아보세요!',
+  description: '당신에게 어울리는 RPG 직업을 찾아보세요!!',
 };
 
 export default function RootLayout({
