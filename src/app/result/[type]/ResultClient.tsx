@@ -1,0 +1,105 @@
+'use client';
+
+import { JobType } from '@/types/test';
+import Link from 'next/link';
+import JobImage from '@/components/JobImage';
+import ShareIcon from '@/components/ShareIcon';
+import JobStats from '@/components/JobStats';
+import Button from '@/components/Button';
+import { useCallback } from 'react';
+import { jobDescriptions } from './jobDescriptions';
+
+type JobInfo = (typeof jobDescriptions)[JobType];
+
+interface ResultClientProps {
+  params: { type: JobType };
+  jobInfo: JobInfo;
+}
+
+export default function ResultClient({ params, jobInfo }: ResultClientProps) {
+  const handleShare = useCallback(() => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: 'RPG 직업 추천 테스트',
+          text: `나의 RPG 직업은 ${jobInfo.title}입니다!\n${jobInfo.description}`,
+          url: window.location.href,
+        })
+        .catch((error) => {
+          console.log('공유하기 실패:', error);
+        });
+    } else {
+      const text = `나의 RPG 직업은 ${jobInfo.title}입니다!\n${jobInfo.description}\n\n테스트 하러가기: ${window.location.origin}`;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('클립보드에 복사되었습니다!');
+      });
+    }
+  }, [jobInfo]);
+
+  if (!jobInfo) {
+    return (
+      <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-text-primary mb-4">
+            잘못된 접근입니다
+          </h1>
+          <Button variant="primary">
+            <Link href="/">처음으로 돌아가기</Link>
+          </Button>
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
+      <div
+        className="max-w-2xl w-full space-y-8 p-8 bg-background-paper rounded-xl shadow-lg animate-slide-up 
+                     border border-primary/10 backdrop-blur-sm"
+      >
+        <div className="text-center">
+          <JobImage jobType={params.type} />
+          <h1 className="text-3xl font-bold text-text-primary mb-2 animate-fade-in">
+            당신의 RPG 직업은...
+          </h1>
+          <h2 className={`text-4xl font-bold mb-4 text-accent-${params.type}`}>
+            {jobInfo.title}
+          </h2>
+          <p className="text-text-secondary mb-8">{jobInfo.description}</p>
+        </div>
+
+        <div className="space-y-8">
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold text-text-primary">
+              주요 특성
+            </h3>
+            <ul className="list-disc list-inside space-y-2 text-text-secondary">
+              {jobInfo.characteristics.map((char, index) => (
+                <li key={index}>{char}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold text-text-primary">능력치</h3>
+            <JobStats stats={jobInfo.stats} />
+          </div>
+        </div>
+
+        <div className="flex gap-4">
+          <Button variant="primary" fullWidth>
+            <Link href="/">다시 테스트하기</Link>
+          </Button>
+          <Button
+            onClick={handleShare}
+            variant="outline"
+            fullWidth
+            className="flex items-center justify-center"
+          >
+            <ShareIcon />
+            결과 공유하기
+          </Button>
+        </div>
+      </div>
+    </main>
+  );
+}

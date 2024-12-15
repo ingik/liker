@@ -39,3 +39,34 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 환경 변수
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# 보안 키와 인증서
+*.pem
+*.key
+*.cert
+
+# 로그 파일
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 개인 설정 파일
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 비밀 설정 파일
+config.secret.js
+config.secret.json
+secrets.json
