@@ -8,6 +8,7 @@ import JobStats from '@/components/JobStats';
 import Button from '@/components/Button';
 import { useCallback } from 'react';
 import { jobDescriptions } from './jobDescriptions';
+import { useRouter } from 'next/router';
 
 type JobInfo = (typeof jobDescriptions)[JobType];
 
@@ -17,6 +18,12 @@ interface ResultClientProps {
 }
 
 export default function ResultClient({ params, jobInfo }: ResultClientProps) {
+  const router = useRouter();
+
+  const reTest = () => {
+    router.push('/');
+  };
+
   const handleShare = useCallback(() => {
     if (navigator.share) {
       navigator
@@ -86,13 +93,12 @@ export default function ResultClient({ params, jobInfo }: ResultClientProps) {
         </div>
 
         <div className="flex gap-4">
-          <Button variant="primary" fullWidth>
-            <Link href="/">다시 테스트하기</Link>
+          <Button variant="primary" asChild onClick={reTest}>
+            다시 테스트하기
           </Button>
           <Button
             onClick={handleShare}
             variant="outline"
-            fullWidth
             className="flex items-center justify-center"
           >
             <ShareIcon />

@@ -182,7 +182,6 @@ export default function TestPage() {
                 key={index}
                 onClick={() => handleAnswer(index)}
                 variant="outline"
-                fullWidth
                 className="p-4 text-left hover:scale-[1.02] hover:shadow-lg"
               >
                 {option.text}
