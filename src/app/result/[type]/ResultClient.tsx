@@ -6,9 +6,9 @@ import JobImage from '@/components/JobImage';
 import ShareIcon from '@/components/ShareIcon';
 import JobStats from '@/components/JobStats';
 import Button from '@/components/Button';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { jobDescriptions } from './jobDescriptions';
-import { useRouter } from 'next/router';
+import { GetStaticProps } from 'next';
 
 type JobInfo = (typeof jobDescriptions)[JobType];
 
@@ -18,12 +18,6 @@ interface ResultClientProps {
 }
 
 export default function ResultClient({ params, jobInfo }: ResultClientProps) {
-  const router = useRouter();
-
-  const reTest = () => {
-    router.push('/');
-  };
-
   const handleShare = useCallback(() => {
     if (navigator.share) {
       navigator
@@ -93,13 +87,16 @@ export default function ResultClient({ params, jobInfo }: ResultClientProps) {
         </div>
 
         <div className="flex gap-4">
-          <Button variant="primary" asChild onClick={reTest}>
-            다시 테스트하기
-          </Button>
+          <Link
+            className="flex-1 rounded-md flex items-center justify-center bg-primary text-white hover:bg-primary-dark active:bg-primary-dark/90 text-center"
+            href="/"
+          >
+            <p>다시 테스트하기</p>
+          </Link>
           <Button
             onClick={handleShare}
             variant="outline"
-            className="flex items-center justify-center"
+            className="flex items-center justify-center row-auto"
           >
             <ShareIcon />
             결과 공유하기
@@ -109,3 +106,20 @@ export default function ResultClient({ params, jobInfo }: ResultClientProps) {
     </main>
   );
 }
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  const { type } = context.params as { type: JobType };
+  const jobInfo = jobDescriptions[type]; // jobDescriptions에서 데이터 가져오기
+
+  if (!jobInfo) {
+    return {
+      notFound: true, // jobInfo가 없으면 404 페이지 리다이렉트
+    };
+  }
+
+  return {
+    props: {
+      jobInfo,
+    },
+  };
+};

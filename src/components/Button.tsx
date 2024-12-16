@@ -29,7 +29,7 @@ const Button = forwardRef<HTMLElement, ButtonProps>(
     return (
       <Comp
         ref={ref}
-        className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles} ${className} w-full bg-red-500 flex-1`}
+        className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles} ${className} w-full flex-1`}
         {...props}
       >
         <span className={contentStyles}>{children}</span>
